@@ -11,10 +11,9 @@ CREATE TABLE Patients
 CREATE TABLE Dates
 (
 	ID INT PRIMARY KEY NOT NULL IDENTITY(1,1),
-	DayDate DATETIME NOT NULL,
+	DateDay DATETIME NOT NULL,
 	Cost FLOAT NOT NULL,
 );
-
 
 CREATE TABLE DatePatient 
 (
@@ -25,9 +24,8 @@ CREATE TABLE DatePatient
 	CONSTRAINT Patient_FK FOREIGN KEY (idPatient) REFERENCES Patients(ID)
 );
 
-
-============
-
+/*===========================================================================================*/
+go
 CREATE PROCEDURE createPatient
 	@Name varchar(60),
 	@PictureBase64 text,
@@ -39,12 +37,11 @@ BEGIN
         INSERT INTO Patients(Name, PictureBase64, Process, Latitude, Longitude) 
 	VALUES(@Name, @PictureBase64, @Process, @Latitude, @Longitude);
 END
+go
 
-
-
-============
+/*===========================================================================================*/
 CREATE PROCEDURE createDate
-	@DateDay datetime
+	@DateDay datetime,
 	@Cost float
 AS
 BEGIN
@@ -52,11 +49,10 @@ BEGIN
 	VALUES(@DateDay, @Cost);
 END
 
-exec createDate
-	'08/09/2020', 300
+/*example exec createDate	'08/09/2020', 300 */
 
-
-============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE addDateToPatient
 	@IDPatient INT,
 	@IDDate INT
@@ -65,10 +61,10 @@ BEGIN
 	INSERT INTO DatePatient (idPatient, idDate) VALUES (@IDPatient, @IDDate);
 END
 
-exec addDateToPatient 1, 1; //date, patient
+/* exec addDateToPatient 1, 1; //date, patient*/
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE getDatesFromPatient
 	@IDPatient int
 AS
@@ -76,31 +72,31 @@ BEGIN
 	SELECT d.* FROM Dates d INNER JOIN DatePatient dp ON d.ID = dp.idPatient WHERE ID = @IDPatient;
 END
 
-//DROP PROCEDURE dbo.getDatesFromPatient GO
-EXEC getDatesFromPatient 3;
+/*DROP PROCEDURE dbo.getDatesFromPatient GO 
+EXEC getDatesFromPatient 3; */
 
-
-==============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE getAllPatients
 AS
 BEGIN
 	SELECT * FROM Patients;
 END
 
-EXEC getAllPatients
+/* EXEC getAllPatients */
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE getAllDates
 AS
 BEGIN
 	SELECT * FROM Dates;
 END
 
-EXEC getAllDates;
+/* EXEC getAllDates;*/
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE getDateByID
 	@IDDate int
 AS
@@ -108,10 +104,10 @@ BEGIN
 	SELECT * FROM Dates WHERE Dates.ID = @IDDate;
 END
 
-EXEC getDateByID 1;
+/* EXEC getDateByID 1;*/
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE getPatientByID
 	@IDPatient int
 AS
@@ -119,10 +115,10 @@ BEGIN
 	SELECT * FROM Patients WHERE Patients.ID = @IDPatient;
 END
 
-EXEC getPatientByID 1;
+/* EXEC getPatientByID 1; */
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE updatePatient
     @ID int,
     @Name varchar(80),
@@ -139,13 +135,13 @@ AS
 	Process = @Process,
 	Latitude = @Latitude,
 	Longitude = @Longitude
-	WHERE IDPatient = @ID;
+	WHERE ID = @ID;
       END
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE updateDate
-	@ID
+	@ID int,
 	@DateDay datetime,
 	@Cost float
 AS
@@ -153,16 +149,16 @@ BEGIN
 	UPDATE Dates SET
 	[DateDay] = @DateDay,
 	Cost = @Cost
-	WHERE IDDate = @ID;
+	WHERE ID = @ID;
 END
 
-EXEC updateDate
+/* EXEC updateDate
 	1,
 	'08/12/2020',
-	310.50
+	310.50 */
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE deletePatient
 	@IDPatient int
 AS
@@ -171,10 +167,10 @@ AS
          DELETE FROM Patients WHERE ID = @IDPatient;
       END
 
-exec deletePatient 1
+/* exec deletePatient 1*/
 
-
-=============
+go
+/*===========================================================================================*/
 CREATE PROCEDURE deleteDate
 	@IDDate int
 AS
@@ -183,5 +179,5 @@ AS
          DELETE FROM Dates WHERE ID = @IDDate;
       END
 
-exec deleteDate 1
+/* exec deleteDate 1*/
 
